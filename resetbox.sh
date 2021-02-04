@@ -2,28 +2,35 @@
 
 # Default values
 true ${HS110_IP:=192.168.1.100}
+true ${URL:=http://google.com}
+true ${D1:=300}
+true ${D2:=30}
+true ${D3:=10}
+true ${D4:=3}
+true ${D5:=600}
 
 # Check Internet
 echo "Starting Internet check ..."
 while true
 do
-   wget -q -o - http://google.com >/dev/null
+   wget -q --spider ${URL}
    if [[ $? -eq 0 ]]; then
      echo $(date) was: online
    else
-     echo $(date) was: OFFLINE, retry in 30 seconds
-     sleep 30
-     wget -q -o - http://google.com >/dev/null
+     echo $(date) was: OFFLINE, retry in ${D2} seconds
+     sleep ${D2}
+     wget -q --spider ${URL}
      if [[ $? -eq 0 ]]; then
        echo $(date) was: now online
      else
-       echo $(date) was: still OFFLINE, reboot in 10s
-       sleep 10
+       echo $(date) was: still OFFLINE, reboot in ${D3} seconds
+       sleep ${D3}
        tplink_smartplug.py -t ${HS110_IP} -c off
-       sleep 3
+       sleep ${D4}
        tplink_smartplug.py -t ${HS110_IP} -c on
-       sleep 600
+       sleep ${D5}
      fi
    fi
- sleep 300
+ sleep ${D1}
 done
+echo "Stopped Internet check ..."
