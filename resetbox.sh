@@ -31,6 +31,8 @@ do
        sleep ${D5}
      fi
    fi
+ echo -n $(date) SmartPlug test :
+ tplink_smartplug.py -q -t ${HS110_IP} -c info
  sleep ${D1}
 done
 echo "Stopped Internet check ..."
